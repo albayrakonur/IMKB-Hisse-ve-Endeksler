@@ -15,10 +15,15 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.github.mikephil.charting.charts.Chart;
+import com.github.mikephil.charting.charts.LineChart;
+import com.github.mikephil.charting.data.BarEntry;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -145,6 +150,13 @@ public class HisseDetayActivity extends AppCompatActivity {
             String change = jsonObject.getString("channge");
             TextView changeTv = findViewById(R.id.changeText);
             changeTv.setText("% Degisim: " + change);
+
+            JSONArray jsonArray = jsonObject.getJSONArray("graphicData");
+            System.out.println(jsonArray.length());
+
+            Chart chart = findViewById(R.id.chart);
+            ArrayList<LineChart> lineCharts = new ArrayList<>();
+//            lineCharts.add(new )
 
 
         } catch (Exception e) {
