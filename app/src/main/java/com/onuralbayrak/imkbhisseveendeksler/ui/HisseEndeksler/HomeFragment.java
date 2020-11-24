@@ -2,6 +2,7 @@ package com.onuralbayrak.imkbhisseveendeksler.ui.HisseEndeksler;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -25,6 +26,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.onuralbayrak.imkbhisseveendeksler.HisseDetayActivity;
 import com.onuralbayrak.imkbhisseveendeksler.MyCipher;
 import com.onuralbayrak.imkbhisseveendeksler.R;
 
@@ -47,6 +49,7 @@ public class HomeFragment extends Fragment {
     public String ivs;
     public JSONArray stocksData;
     public boolean finishedGettingData;
+    public MyCipher myCipher = null;
     private HomeViewModel homeViewModel;
     private SharedPreferences sharedPreferences;
 
@@ -69,124 +72,24 @@ public class HomeFragment extends Fragment {
 
         finishedGettingData = false;
 
-        getDataAndFillTheTable();
+        getData();
 
         searchView = root.findViewById(R.id.searchBoxText);
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                fillTheTable(query);
+                insertDataToTable(query);
                 return false;
             }
 
             @Override
             public boolean onQueryTextChange(String newText) {
-
-                if (newText.equals("")) {
-                    fillTheTable(null);
-                }
+                insertDataToTable(newText);
                 return false;
             }
         });
 
         return root;
-    }
-
-    public void getDataAndFillTheTable() {
-        //Base64 Decode
-        byte[] keyDecoded = Base64.decode(key, Base64.DEFAULT);
-        byte[] ivsDecoded = Base64.decode(ivs, Base64.DEFAULT);
-
-        MyCipher myCipher = new MyCipher(keyDecoded, ivsDecoded, period);
-        String ciphertext = myCipher.encryption();
-
-        //Post Request to get Data
-        String stocksListUrl = "https://mobilechallenge.veripark.com/api/stocks/list";
-        RequestQueue requestQueue = Volley.newRequestQueue(getContext());
-
-        JSONObject postData = new JSONObject();
-        try {
-            postData.put("period", ciphertext);
-
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
-        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, stocksListUrl, postData, new Response.Listener<JSONObject>() {
-            @Override
-            public void onResponse(JSONObject response) {
-                //System.out.println(response);
-                finishedGettingData = true;
-                try {
-                    stocksData = response.getJSONArray("stocks");
-                    for (int i = 0; i < stocksData.length(); i++) {
-                        JSONObject tmp = stocksData.getJSONObject(i);
-                        String sembol = myCipher.decryption(tmp.getString("symbol"));
-                        String fiyat = tmp.getString("price");
-                        String fark = tmp.getString("difference");
-                        double hacim = Double.parseDouble("801457.5");
-                        String alis = tmp.getString("bid");
-                        String satis = tmp.getString("offer");
-                        boolean isDown;
-                        isDown = tmp.getString("isDown").equals("true");
-                        boolean isUp;
-                        isUp = tmp.getString("isUp").equals("true");
-
-                        TableRow tableRow = new TableRow(getContext());
-                        TextView textView1 = new TextView(getContext());
-                        textView1.setText(sembol);
-                        TextView textView2 = new TextView(getContext());
-                        textView2.setText(fiyat);
-                        TextView textView3 = new TextView(getContext());
-                        textView3.setText(fark);
-                        TextView textView4 = new TextView(getContext());
-                        textView4.setText(hacim + "");
-                        TextView textView5 = new TextView(getContext());
-                        textView5.setText(alis);
-                        TextView textView6 = new TextView(getContext());
-                        textView6.setText(satis);
-                        TextView textView7 = new TextView(getContext());
-                        if (isDown) {
-                            textView7.setText("Azalan");
-                        } else {
-                            textView7.setText("Yukselen");
-                        }
-                        tableRow.addView(textView1);
-                        tableRow.addView(textView2);
-                        tableRow.addView(textView3);
-                        tableRow.addView(textView4);
-                        tableRow.addView(textView5);
-                        tableRow.addView(textView6);
-                        tableRow.addView(textView7);
-
-                        if (size % 2 == 0) {
-                            tableRow.setBackgroundColor(Color.parseColor("#eeeeee"));
-                        }
-                        size += 1;
-                        tableLayout.addView(tableRow);
-
-                    }
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                error.printStackTrace();
-                System.out.println(error.networkResponse.data.toString());
-            }
-
-        }) {    //this is the part, that adds the header to the request
-            @Override
-            public Map<String, String> getHeaders() {
-                Map<String, String> params = new HashMap<String, String>();
-                params.put("X-VP-Authorization", authorization);
-                params.put("content-type", "application/json");
-                return params;
-            }
-        };
-        requestQueue.add(jsonObjectRequest);
     }
 
     public void initializeEmptyTable() {
@@ -219,95 +122,123 @@ public class HomeFragment extends Fragment {
         tableLayout.addView(tableRow);
     }
 
-    public void fillTheTable(String filter) {
+    public void getData() {
+        //Base64 Decode
+        byte[] keyDecoded = Base64.decode(key, Base64.DEFAULT);
+        byte[] ivsDecoded = Base64.decode(ivs, Base64.DEFAULT);
+
+        myCipher = new MyCipher(keyDecoded, ivsDecoded, period);
+        String ciphertext = myCipher.encryption();
+
+        //Post Request to get Data
+        String stocksListUrl = "https://mobilechallenge.veripark.com/api/stocks/list";
+        RequestQueue requestQueue = Volley.newRequestQueue(getContext());
+
+        JSONObject postData = new JSONObject();
+        try {
+            postData.put("period", ciphertext);
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, stocksListUrl, postData, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                //System.out.println(response);
+                finishedGettingData = true;
+                try {
+                    stocksData = response.getJSONArray("stocks");
+                    insertDataToTable(null);
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                error.printStackTrace();
+                System.out.println(error.networkResponse.data.toString());
+            }
+
+        }) {    //this is the part, that adds the header to the request
+            @Override
+            public Map<String, String> getHeaders() {
+                Map<String, String> params = new HashMap<String, String>();
+                params.put("X-VP-Authorization", authorization);
+                params.put("content-type", "application/json");
+                return params;
+            }
+        };
+        requestQueue.add(jsonObjectRequest);
+    }
+
+    public void insertDataToTable(String filter) {
         initializeEmptyTable();
         for (int i = 0; i < stocksData.length(); i++) {
             try {
-                System.out.println(stocksData.getString(0));
+                JSONObject tmp = stocksData.getJSONObject(i);
+                String sembol = myCipher.decryption(tmp.getString("symbol"));
+                String fiyat = tmp.getString("price");
+                String fark = tmp.getString("difference");
+                double hacim = Double.parseDouble("801457.5");
+                String alis = tmp.getString("bid");
+                String satis = tmp.getString("offer");
+                boolean isDown;
+                isDown = tmp.getString("isDown").equals("true");
+                boolean isUp;
+                isUp = tmp.getString("isUp").equals("true");
+
+                if (filter != null && !sembol.toLowerCase().contains(filter.toLowerCase())) {
+                    continue;
+                }
+
+                TableRow tableRow = new TableRow(getContext());
+                TextView textView1 = new TextView(getContext());
+                textView1.setText(sembol);
+                TextView textView2 = new TextView(getContext());
+                textView2.setText(fiyat);
+                TextView textView3 = new TextView(getContext());
+                textView3.setText(fark);
+                TextView textView4 = new TextView(getContext());
+                textView4.setText(hacim + "");
+                TextView textView5 = new TextView(getContext());
+                textView5.setText(alis);
+                TextView textView6 = new TextView(getContext());
+                textView6.setText(satis);
+                TextView textView7 = new TextView(getContext());
+                if (isDown) {
+                    textView7.setText("Azalan");
+                } else {
+                    textView7.setText("Yukselen");
+                }
+                tableRow.addView(textView1);
+                tableRow.addView(textView2);
+                tableRow.addView(textView3);
+                tableRow.addView(textView4);
+                tableRow.addView(textView5);
+                tableRow.addView(textView6);
+                tableRow.addView(textView7);
+                tableRow.setTag(tmp.getString("id"));
+
+                if (size % 2 == 0) {
+                    tableRow.setBackgroundColor(Color.parseColor("#eeeeee"));
+                }
+                size += 1;
+                tableRow.setClickable(true);
+                tableRow.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent = new Intent(getActivity(), HisseDetayActivity.class);
+                        intent.putExtra("id", v.getTag().toString());
+                        startActivity(intent);
+                    }
+                });
+                tableLayout.addView(tableRow);
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
     }
-//    public void getData(String filter) {
-//        System.out.println("filter: " + filter);
-//        String dataURL = "https://lit-meadow-91580.herokuapp.com/rest/getPotholes/";
-//        RequestQueue requestQueue = Volley.newRequestQueue(getContext());
-//
-//        JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(Request.Method.GET, dataURL, null,
-//                new Response.Listener<JSONArray>() {
-//                    @Override
-//                    public void onResponse(JSONArray response) {
-//                        try {
-//                            // Loop through the array elements
-//                            for (int i = 0; i < response.length(); i++) {
-//                                // Get current json object
-//                                JSONObject jsonObject = response.getJSONObject(i);
-//                                JSONObject jsonObject1 = new JSONObject(jsonObject.get("addr").toString());
-//                                if (filter != null && !jsonObject1.get("district").toString().toLowerCase().contains(filter.toLowerCase())) {
-//                                    continue;
-//                                }
-////                                System.out.println(jsonObject.get("creation_date"));
-////                                System.out.println(jsonObject.get("label"));
-////                                System.out.println(jsonObject1.get("district"));
-//                                TableRow tableRow = new TableRow(getContext());
-//
-//                                TextView textView1 = new TextView(getContext());
-//                                SimpleDateFormat fmt = new SimpleDateFormat("yyyy-MM-dd");
-//                                Date date;
-//                                String creationDate = "";
-//                                try {
-//                                    date = fmt.parse(jsonObject.get("creation_date").toString()); //Button Text: Remind on: 15 SEP 2017 ( 10:10 ) PM
-//                                    String newDateString = fmt.format(date);
-//                                    String tempDate = newDateString;
-//                                    creationDate = tempDate;
-//                                } catch (ParseException e) {
-//                                    e.printStackTrace();
-//                                }
-//                                textView1.setText(creationDate);
-//                                TextView textView2 = new TextView(getContext());
-//                                textView2.setText(jsonObject.get("label").toString());
-//                                TextView textView3 = new TextView(getContext());
-//                                textView3.setText(jsonObject1.get("district").toString());
-//                                textView3.setTag(jsonObject1);
-//                                textView3.setOnClickListener(new View.OnClickListener() {
-//                                    @Override
-//                                    public void onClick(View v) {
-//                                        try {
-//                                            JSONObject tmp = new JSONObject(v.getTag().toString());
-//                                            System.out.println(tmp.get("district").toString());
-//                                        } catch (Exception e) {
-//                                            e.printStackTrace();
-//                                        }
-//                                    }
-//                                });
-//                                tableRow.addView(textView1);
-//                                tableRow.addView(textView2);
-//                                tableRow.addView(textView3);
-//                                if (size % 2 == 0) {
-//                                    tableRow.setBackgroundColor(Color.parseColor("#eeeeee"));
-//                                }
-//                                tableRow.setClickable(true);
-//                                tableLayout.addView(tableRow);
-//                                size += 1;
-//                            }
-//                        } catch (JSONException e) {
-//                            e.printStackTrace();
-//                            Toast.makeText(getContext(), "Verileri Getirirken Hata!", Toast.LENGTH_LONG);
-//                        }
-//                    }
-//                },
-//                new Response.ErrorListener() {
-//                    @Override
-//                    public void onErrorResponse(VolleyError error) {
-//                        // Do something when error occurred
-//                    }
-//                }
-//        );
-//
-//        // Add the request to the RequestQueue.
-//        requestQueue.add(jsonArrayRequest);
-//
-//
-//    }
 }
