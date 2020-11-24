@@ -7,6 +7,7 @@ import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -35,6 +36,8 @@ public class MainActivity extends AppCompatActivity {
         String manufacturer = Build.MANUFACTURER;   //Phone Manufacturer
         String model = Build.MODEL; //Phone Model
         String versionRelease = Build.VERSION.RELEASE;  // Android Version
+        Button button = findViewById(R.id.button);
+        button.setClickable(false);
 
         String handshakeURL = "https://mobilechallenge.veripark.com/api/handshake/start";
         RequestQueue requestQueue = Volley.newRequestQueue(this);
@@ -57,6 +60,7 @@ public class MainActivity extends AppCompatActivity {
                     aesKey = response.getString("aesKey");
                     aesIV = response.getString("aesIV");
                     authorization = response.getString("authorization");
+                    button.setClickable(true);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
