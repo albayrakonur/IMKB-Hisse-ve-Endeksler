@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_home"
+            android:title="@string/menu_home" />
+        <item
+            android:id="@+id/nav_yukselenler"
+            android:title="@string/menu_yukselenler" />
+        <item
+            android:id="@+id/nav_dusenler"
+            android:title="@string/menu_dusenler" />
+
+        <item
+            android:id="@+id/nav_hacim30"
+            android:title="@string/menu_hacim30" />
+        <item
+            android:id="@+id/nav_hacim50"
+            android:title="@string/menu_hacim50" />
+        <item
+            android:id="@+id/nav_hacim100"
+            android:title="@string/menu_hacim100" />
+    </group>
+</menu>

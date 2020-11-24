@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mobile_navigation"
+    app:startDestination="@+id/nav_home">
+
+    <fragment
+        android:id="@+id/nav_home"
+        android:name="com.onuralbayrak.imkbhisseveendeksler.ui.HisseEndeksler.HomeFragment"
+        android:label="@string/menu_home"
+        tools:layout="@layout/fragment_hisse_endeksler" />
+
+    <fragment
+        android:id="@+id/nav_yukselenler"
+        android:name="com.onuralbayrak.imkbhisseveendeksler.ui.imkbYukselenler.YukselenlerFragment"
+        android:label="@string/menu_yukselenler"
+        tools:layout="@layout/fragment_imkb_yukselenler" />
+
+    <fragment
+        android:id="@+id/nav_dusenler"
+        android:name="com.onuralbayrak.imkbhisseveendeksler.ui.imkbDusenler.DusenlerFragment"
+        android:label="@string/menu_dusenler"
+        tools:layout="@layout/fragment_imkb_dusenler" />
+
+    <fragment
+        android:id="@+id/nav_hacim30"
+        android:name="com.onuralbayrak.imkbhisseveendeksler.ui.hacim30.Hacim30Fragment"
+        android:label="@string/menu_hacim30"
+        tools:layout="@layout/fragment_hacim30" />
+    <fragment
+        android:id="@+id/nav_hacim50"
+        android:name="com.onuralbayrak.imkbhisseveendeksler.ui.hacim50.Hacim50Fragment"
+        android:label="@string/menu_hacim50"
+        tools:layout="@layout/fragment_hacim50" />
+    <fragment
+        android:id="@+id/nav_hacim100"
+        android:name="com.onuralbayrak.imkbhisseveendeksler.ui.hacim100.Hacim100Fragment"
+        android:label="@string/menu_hacim100"
+        tools:layout="@layout/fragment_hacim100" />
+
+</navigation>

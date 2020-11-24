@@ -1,0 +1,17 @@
+<resources>
+    <string name="app_name">IMKB Hisse ve Endeksler</string>
+    <string name="title_activity_main2">MainActivity2</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="nav_header_title">Android Studio</string>
+    <string name="nav_header_subtitle">android.studio@android.com</string>
+    <string name="nav_header_desc">Navigation header</string>
+    <string name="action_settings">Settings</string>
+
+    <string name="menu_home">IMKB Hisse ve Endeksler</string>
+    <string name="menu_yukselenler">Yukselenler</string>
+    <string name="menu_dusenler">Dusenler</string>
+    <string name="menu_hacim30">Hacme Gore - 30</string>
+    <string name="menu_hacim50">Hacme Gore - 50</string>
+    <string name="menu_hacim100">Hacme Gore - 100</string>
+</resources>
