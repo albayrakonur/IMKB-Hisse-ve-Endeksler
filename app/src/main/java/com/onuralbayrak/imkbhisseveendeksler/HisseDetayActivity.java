@@ -3,6 +3,7 @@ package com.onuralbayrak.imkbhisseveendeksler;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Base64;
 import android.widget.TextView;
@@ -18,6 +19,9 @@ import com.android.volley.toolbox.Volley;
 import com.github.mikephil.charting.charts.Chart;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.data.BarEntry;
+import com.github.mikephil.charting.data.Entry;
+import com.github.mikephil.charting.data.LineData;
+import com.github.mikephil.charting.data.LineDataSet;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -155,8 +159,19 @@ public class HisseDetayActivity extends AppCompatActivity {
             System.out.println(jsonArray.length());
 
             Chart chart = findViewById(R.id.chart);
-            ArrayList<LineChart> lineCharts = new ArrayList<>();
-//            lineCharts.add(new )
+            ArrayList<Entry> entries = new ArrayList<Entry>();
+            for (int i = 0; i < jsonArray.length(); i++) {
+                JSONObject graphData = jsonArray.getJSONObject(i);
+                entries.add(new Entry(Integer.parseInt(graphData.getString("day")), graphData.getInt("value")));
+            }
+            //System.out.println(entries);
+            LineDataSet dataSet = new LineDataSet(entries, "Label"); // add entries to dataset
+            dataSet.setColor(Color.parseColor("#b71e46"));
+            dataSet.setValueTextColor(Color.parseColor("#000000")); // styling, ...
+
+            LineData lineData = new LineData(dataSet);
+            chart.setData(lineData);
+            chart.invalidate(); // refresh
 
 
         } catch (Exception e) {
