@@ -4,11 +4,14 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.graphics.DashPathEffect;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Base64;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -17,17 +20,17 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.github.mikephil.charting.charts.Chart;
-import com.github.mikephil.charting.charts.LineChart;
-import com.github.mikephil.charting.components.Legend;
-import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
+import com.github.mikephil.charting.formatter.ValueFormatter;
+import com.github.mikephil.charting.utils.Utils;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -82,7 +85,7 @@ public class HisseDetayActivity extends AppCompatActivity {
             @Override
             public void onResponse(JSONObject response) {
                 //System.out.println(response);
-                System.out.println(response);
+                //System.out.println(response);
                 fillTheBlanks(response);
                 //insertDataToTable(null);
 
@@ -160,17 +163,47 @@ public class HisseDetayActivity extends AppCompatActivity {
             System.out.println(jsonArray.length());
 
             Chart chart = findViewById(R.id.chart);
+
             ArrayList<Entry> entries = new ArrayList<Entry>();
             for (int i = 0; i < jsonArray.length(); i++) {
                 JSONObject graphData = jsonArray.getJSONObject(i);
                 entries.add(new Entry(Integer.parseInt(graphData.getString("day")), graphData.getInt("value")));
             }
             //System.out.println(entries);
-            LineDataSet dataSet = new LineDataSet(entries, "Label"); // add entries to dataset
+            LineDataSet dataSet = new LineDataSet(entries, "STOCKS"); // add entries to dataset
             dataSet.setColor(Color.parseColor("#b71e46"));
             dataSet.setValueTextColor(Color.parseColor("#000000")); // styling, ...
+            dataSet.setDrawIcons(false);
+            dataSet.enableDashedLine(10f, 5f, 0f);
+            dataSet.enableDashedHighlightLine(10f, 5f, 0f);
+            dataSet.setColor(Color.DKGRAY);
+            dataSet.setCircleColor(Color.DKGRAY);
+            dataSet.setLineWidth(1f);
+            dataSet.setCircleRadius(3f);
+            dataSet.setDrawCircleHole(false);
+            dataSet.setValueTextSize(9f);
+            dataSet.setDrawFilled(true);
+            dataSet.setFormLineWidth(1f);
+            dataSet.setFormLineDashEffect(new DashPathEffect(new float[]{10f, 5f}, 0f));
+            dataSet.setFormSize(15.f);
+            dataSet.setValueFormatter(new ValueFormatter() {
+                @Override
+                public String getFormattedValue(float value) {
+                    DecimalFormat df = new DecimalFormat();
+                    df.setMaximumFractionDigits(1);
+
+                    return "" + df.format(value);
+                }
+            });
+            if (Utils.getSDKInt() >= 18) {
+                Drawable drawable = ContextCompat.getDrawable(this, R.drawable.fade_blue);
+                dataSet.setFillDrawable(drawable);
+            } else {
+                dataSet.setFillColor(Color.DKGRAY);
+            }
 
             LineData lineData = new LineData(dataSet);
+
             chart.setData(lineData);
             chart.setBackgroundColor(Color.parseColor("#eeeeee"));
             chart.invalidate(); // refresh
