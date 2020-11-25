@@ -48,10 +48,9 @@ public class HomeFragment extends Fragment {
     public String key;
     public String ivs;
     public JSONArray stocksData;
-    public boolean finishedGettingData;
     public MyCipher myCipher = null;
-    private HomeViewModel homeViewModel;
     private SharedPreferences sharedPreferences;
+    private HomeViewModel homeViewModel;
 
     @SuppressLint("ResourceType")
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -59,6 +58,7 @@ public class HomeFragment extends Fragment {
         homeViewModel =
                 new ViewModelProvider(this).get(HomeViewModel.class);
         View root = inflater.inflate(R.layout.fragment_hisse_endeksler, container, false);
+
         tableLayout = root.findViewById(R.id.mainTable);
         initializeEmptyTable();
         scrollView = new ScrollView(getContext());
@@ -69,8 +69,6 @@ public class HomeFragment extends Fragment {
         key = sharedPreferences.getString("key", "-");
         ivs = sharedPreferences.getString("ivs", "-");
         authorization = sharedPreferences.getString("authorization", "-");
-
-        finishedGettingData = false;
 
         getData();
 
@@ -146,7 +144,6 @@ public class HomeFragment extends Fragment {
             @Override
             public void onResponse(JSONObject response) {
                 //System.out.println(response);
-                finishedGettingData = true;
                 try {
                     stocksData = response.getJSONArray("stocks");
                     insertDataToTable(null);

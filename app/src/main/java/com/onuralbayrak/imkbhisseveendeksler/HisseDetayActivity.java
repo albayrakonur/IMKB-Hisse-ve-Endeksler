@@ -18,6 +18,7 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.github.mikephil.charting.charts.Chart;
 import com.github.mikephil.charting.charts.LineChart;
+import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
@@ -171,6 +172,7 @@ public class HisseDetayActivity extends AppCompatActivity {
 
             LineData lineData = new LineData(dataSet);
             chart.setData(lineData);
+            chart.setBackgroundColor(Color.parseColor("#eeeeee"));
             chart.invalidate(); // refresh
 
 
