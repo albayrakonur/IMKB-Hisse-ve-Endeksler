@@ -135,7 +135,7 @@ public class HisseDetayActivity extends AppCompatActivity {
             String volume = jsonObject.getString("volume");
             TextView volumeTv = findViewById(R.id.volumeText);
             float volumeFloat = Float.parseFloat(volume);
-            volumeTv.setText("Hacim: " + df.format(volumeFloat));
+            volumeTv.setText("Hacim: " + df.format(volumeFloat).replace(',', '.'));
 
             String offer = jsonObject.getString("offer");
             TextView offerTv = findViewById(R.id.offerText);
