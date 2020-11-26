@@ -14,4 +14,8 @@ A native Android app to see stocks list
 ##### Stocks Details Page
 ![Alt text](./Screenshots/4.png?raw=true "Stocks Details Screen")
 
-<img src="./Screenshots/4.png?raw=true" width="100" height="100">
+<img src="./Screenshots/1.png?raw=true" width="100" height="500">
+<img src="./Screenshots/1.png?raw=true" width="100" height="500">
+<img src="./Screenshots/1.png?raw=true" width="100" height="500">
+<img src="./Screenshots/1.png?raw=true" width="100" height="500">
+<img src="./Screenshots/1.png?raw=true" width="100" height="500">
