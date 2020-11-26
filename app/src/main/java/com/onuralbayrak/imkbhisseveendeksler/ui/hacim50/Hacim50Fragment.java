@@ -154,7 +154,6 @@ public class Hacim50Fragment extends Fragment {
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, stocksListUrl, postData, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
-                //System.out.println(response);
                 try {
                     stocksData = response.getJSONArray("stocks");
                     insertDataToTable(null);
@@ -191,7 +190,7 @@ public class Hacim50Fragment extends Fragment {
                 String fiyat = tmp.getString("price");
                 String fark = tmp.getString("difference");
                 DecimalFormat df2 = new DecimalFormat("#.##");
-                double hacim = Double.parseDouble(tmp.getString("volume").substring(0, tmp.getString("volume").indexOf('.') + 2));
+                String hacim = tmp.getString("volume").substring(0, tmp.getString("volume").indexOf('.') + 2);
                 String alis = tmp.getString("bid");
                 String satis = tmp.getString("offer");
                 boolean isDown;

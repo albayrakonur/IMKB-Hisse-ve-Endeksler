@@ -45,6 +45,8 @@ public class HisseDetayActivity extends AppCompatActivity {
     public String ivs;
     public String id;
     public MyCipher myCipher;
+    public DecimalFormat df = new DecimalFormat("#.00");
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -132,7 +134,8 @@ public class HisseDetayActivity extends AppCompatActivity {
 
             String volume = jsonObject.getString("volume");
             TextView volumeTv = findViewById(R.id.volumeText);
-            volumeTv.setText("Hacim: " + Double.parseDouble(volume));
+            float volumeFloat = Float.parseFloat(volume);
+            volumeTv.setText("Hacim: " + df.format(volumeFloat));
 
             String offer = jsonObject.getString("offer");
             TextView offerTv = findViewById(R.id.offerText);
@@ -178,15 +181,12 @@ public class HisseDetayActivity extends AppCompatActivity {
             }
 
             JSONArray jsonArray = jsonObject.getJSONArray("graphicData");
-            System.out.println(jsonArray.length());
 
             Chart chart = findViewById(R.id.chart);
 
             ArrayList<Entry> entries = new ArrayList<Entry>();
-            DecimalFormat df2 = new DecimalFormat("#.##");
             for (int i = 0; i < jsonArray.length(); i++) {
                 JSONObject graphData = jsonArray.getJSONObject(i);
-                DecimalFormat df = new DecimalFormat("#.00");
                 float val = Float.parseFloat(graphData.getString("value"));
                 entries.add(new Entry(Integer.parseInt(graphData.getString("day")), Float.parseFloat(df.format(val).replace(',', '.'))));
             }
