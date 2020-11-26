@@ -10,6 +10,7 @@ import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.ScrollView;
 import android.widget.SearchView;
 import android.widget.TableLayout;
@@ -17,6 +18,7 @@ import android.widget.TableRow;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
@@ -36,6 +38,8 @@ import org.json.JSONObject;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import info.androidhive.fontawesome.FontDrawable;
 
 public class HomeFragment extends Fragment {
 
@@ -204,11 +208,15 @@ public class HomeFragment extends Fragment {
                 textView5.setText(alis);
                 TextView textView6 = new TextView(getContext());
                 textView6.setText(satis);
-                TextView textView7 = new TextView(getContext());
+                ImageView imageView = new ImageView(getContext());
                 if (isDown) {
-                    textView7.setText("Azalan");
-                } else {
-                    textView7.setText("Yukselen");
+                    FontDrawable drawable = new FontDrawable(getContext(), R.string.fa_sort_down_solid, true, false);
+                    drawable.setTextColor(ContextCompat.getColor(getContext(), android.R.color.holo_red_dark));
+                    imageView.setImageDrawable(drawable);
+                } else if (isUp) {
+                    FontDrawable drawable = new FontDrawable(getContext(), R.string.fa_sort_up_solid, true, false);
+                    drawable.setTextColor(ContextCompat.getColor(getContext(), android.R.color.holo_green_dark));
+                    imageView.setImageDrawable(drawable);
                 }
                 tableRow.addView(textView1);
                 tableRow.addView(textView2);
@@ -216,7 +224,7 @@ public class HomeFragment extends Fragment {
                 tableRow.addView(textView4);
                 tableRow.addView(textView5);
                 tableRow.addView(textView6);
-                tableRow.addView(textView7);
+                tableRow.addView(imageView);
                 tableRow.setTag(tmp.getString("id"));
 
                 if (size % 2 == 0) {

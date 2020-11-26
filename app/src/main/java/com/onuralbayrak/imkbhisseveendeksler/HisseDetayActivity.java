@@ -8,6 +8,7 @@ import android.graphics.DashPathEffect;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Base64;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -34,6 +35,8 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+
+import info.androidhive.fontawesome.FontDrawable;
 
 public class HisseDetayActivity extends AppCompatActivity {
 
@@ -155,9 +158,24 @@ public class HisseDetayActivity extends AppCompatActivity {
             TextView minimumTv = findViewById(R.id.minimumText);
             minimumTv.setText("Taban: " + minimum);
 
+            boolean isDown;
+            isDown = jsonObject.getString("isDown").equals("true");
+            boolean isUp;
+            isUp = jsonObject.getString("isUp").equals("true");
+
             String change = jsonObject.getString("channge");
-            TextView changeTv = findViewById(R.id.changeText);
-            changeTv.setText("% Degisim: " + change);
+            ImageView changeTv = findViewById(R.id.changeText);
+            //changeTv.setText("% Degisim: " + change);
+
+            if (isDown) {
+                FontDrawable drawable = new FontDrawable(getApplication(), R.string.fa_sort_down_solid, true, false);
+                drawable.setTextColor(ContextCompat.getColor(getApplication(), android.R.color.holo_red_dark));
+                changeTv.setImageDrawable(drawable);
+            } else if (isUp) {
+                FontDrawable drawable = new FontDrawable(getApplication(), R.string.fa_sort_up_solid, true, false);
+                drawable.setTextColor(ContextCompat.getColor(getApplication(), android.R.color.holo_green_dark));
+                changeTv.setImageDrawable(drawable);
+            }
 
             JSONArray jsonArray = jsonObject.getJSONArray("graphicData");
             System.out.println(jsonArray.length());
