@@ -21,17 +21,16 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.github.mikephil.charting.charts.Chart;
+import com.github.mikephil.charting.components.IMarker;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
-import com.github.mikephil.charting.formatter.ValueFormatter;
 import com.github.mikephil.charting.utils.Utils;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -202,17 +201,11 @@ public class HisseDetayActivity extends AppCompatActivity {
             dataSet.setValueTextSize(9f);
             dataSet.setDrawFilled(true);
             dataSet.setFormLineWidth(1f);
+            dataSet.setDrawValues(false);
+
             dataSet.setFormLineDashEffect(new DashPathEffect(new float[]{10f, 5f}, 0f));
             dataSet.setFormSize(15.f);
-            dataSet.setValueFormatter(new ValueFormatter() {
-                @Override
-                public String getFormattedValue(float value) {
-                    DecimalFormat df = new DecimalFormat();
-                    df.setMaximumFractionDigits(1);
 
-                    return "" + df.format(value);
-                }
-            });
             if (Utils.getSDKInt() >= 18) {
                 Drawable drawable = ContextCompat.getDrawable(this, R.drawable.fade_blue);
                 dataSet.setFillDrawable(drawable);
@@ -225,6 +218,8 @@ public class HisseDetayActivity extends AppCompatActivity {
             chart.setData(lineData);
             chart.setBackgroundColor(Color.parseColor("#eeeeee"));
             chart.invalidate(); // refresh
+            IMarker marker = new CustomMarkerView(getApplication(), R.layout.custom_marker_view);
+            chart.setMarker(marker);
 
 
         } catch (Exception e) {
