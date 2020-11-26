@@ -31,6 +31,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -182,12 +183,15 @@ public class HisseDetayActivity extends AppCompatActivity {
             Chart chart = findViewById(R.id.chart);
 
             ArrayList<Entry> entries = new ArrayList<Entry>();
+            DecimalFormat df2 = new DecimalFormat("#.##");
             for (int i = 0; i < jsonArray.length(); i++) {
                 JSONObject graphData = jsonArray.getJSONObject(i);
-                entries.add(new Entry(Integer.parseInt(graphData.getString("day")), graphData.getInt("value")));
+                DecimalFormat df = new DecimalFormat("#.00");
+                float val = Float.parseFloat(graphData.getString("value"));
+                entries.add(new Entry(Integer.parseInt(graphData.getString("day")), Float.parseFloat(df.format(val).replace(',', '.'))));
             }
             //System.out.println(entries);
-            LineDataSet dataSet = new LineDataSet(entries, "STOCKS"); // add entries to dataset
+            LineDataSet dataSet = new LineDataSet(entries, ""); // add entries to dataset
             dataSet.setColor(Color.parseColor("#b71e46"));
             dataSet.setValueTextColor(Color.parseColor("#000000")); // styling, ...
             dataSet.setDrawIcons(false);

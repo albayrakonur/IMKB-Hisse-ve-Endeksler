@@ -37,7 +37,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.text.DecimalFormat;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -192,7 +191,6 @@ public class HomeFragment extends Fragment {
                 String sembol = myCipher.decryption(tmp.getString("symbol"));
                 String fiyat = tmp.getString("price");
                 String fark = tmp.getString("difference");
-                DecimalFormat df2 = new DecimalFormat("#.##");
                 double hacim = Double.parseDouble(tmp.getString("volume").substring(0, tmp.getString("volume").indexOf('.') + 2));
                 String alis = tmp.getString("bid");
                 String satis = tmp.getString("offer");
